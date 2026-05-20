@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="sv">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,7 @@
   </head>
   <body>
     <main id="app" class="app-shell">
-      <section class="workspace" aria-label="StepCast kontrollpanel">
+      <section class="workspace" aria-label="StepCast control panel">
         <header class="topbar">
           <div class="brand">
             <span class="brand-mark" aria-hidden="true">
@@ -18,15 +18,15 @@
             </span>
             <div>
               <h1>StepCast</h1>
-              <p>OBS-ready pedometer för Twitch</p>
+              <p>OBS-ready pedometer for Twitch</p>
             </div>
           </div>
-          <nav class="top-actions" aria-label="Snabbval">
-            <a class="icon-link" href="?mode=overlay" target="_blank" rel="noreferrer" title="Öppna overlay">
+          <nav class="top-actions" aria-label="Quick actions">
+            <a class="icon-link" href="?mode=overlay" target="_blank" rel="noreferrer" title="Open overlay">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5V5Zm2 2v10h10V7H7Zm2 2h6v2H9V9Zm0 4h4v2H9v-2Z" /></svg>
               Overlay
             </a>
-            <button id="copyTop" class="icon-button" type="button" title="Kopiera OBS URL">
+            <button id="copyTop" class="icon-button" type="button" title="Copy OBS URL">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h10v12H8V7Zm2 2v8h6V9h-6ZM5 4h10v2H7v10H5V4Z" /></svg>
             </button>
           </nav>
@@ -37,13 +37,13 @@
             <div class="preview-head">
               <div>
                 <h2>Overlay</h2>
-                <p>Så här visas stegen ovanpå din stream.</p>
+                <p>This is how the step counter appears on your stream.</p>
               </div>
               <span id="statusPill" class="status-pill">Manual input</span>
             </div>
             <div id="overlayPreview" class="overlay-stage align-bottom-right">
               <div class="stream-hint"></div>
-              <article class="overlay-card theme-neon" aria-label="Pedometer overlay för OBS">
+              <article class="overlay-card theme-neon" aria-label="Pedometer overlay for OBS">
                 <div class="overlay-label">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 18.8c1.1 0 2-.9 2-2v-.7c0-1.2-1-2.1-2.2-2.1-1.4 0-2.5 1.1-2.5 2.5v.3c0 1.1.9 2 2 2H8Zm7.7-2.3c1.6 0 2.9-1.3 2.9-2.9v-1c0-1.4-1.1-2.5-2.5-2.5-1.7 0-3.1 1.4-3.1 3.1v.4c0 1.6 1.2 2.9 2.7 2.9ZM10.1 12c1.8 0 3.2-1.4 3.2-3.2V6.4c0-1.6-1.3-2.9-2.9-2.9C8.3 3.5 6.8 5 6.8 7.1v1.7c0 1.8 1.5 3.2 3.3 3.2Z" /></svg>
                   <span>StepCast</span>
@@ -55,33 +55,33 @@
                 </div>
                 <div class="progress-track" aria-hidden="true"><span id="progressFill"></span></div>
                 <div class="meta-row">
-                  <span id="paceText">+420 denna stream</span>
-                  <span id="leftText">7,514 kvar</span>
+                  <span id="paceText">+420 this stream</span>
+                  <span id="leftText">7,514 left</span>
                 </div>
               </article>
             </div>
           </div>
 
-          <aside class="control-panel" aria-label="Kontroller">
+          <aside class="control-panel" aria-label="Controls">
             <div class="panel-title">
               <h2>Setup</h2>
-              <span id="savedState">Sparad lokalt</span>
+              <span id="savedState">Saved locally</span>
             </div>
 
-            <ol class="setup-steps" aria-label="Snabbstart">
-              <li><span>1</span>Starta servern</li>
-              <li><span>2</span>Kopiera OBS-länken</li>
-              <li><span>3</span>Välj manuell eller wearable</li>
+            <ol class="setup-steps" aria-label="Quick start">
+              <li><span>1</span>Start the server</li>
+              <li><span>2</span>Copy the OBS link</li>
+              <li><span>3</span>Use manual or wearable steps</li>
             </ol>
 
             <div class="field-group">
               <label for="stepsInput">Steps</label>
               <div class="stepper">
-                <button id="minus100" type="button" aria-label="Minska med 100">
+                <button id="minus100" type="button" aria-label="Decrease by 100">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z" /></svg>
                 </button>
                 <input id="stepsInput" type="number" min="0" step="1" inputmode="numeric" />
-                <button id="plus100" type="button" aria-label="Öka med 100">
+                <button id="plus100" type="button" aria-label="Increase by 100">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" /></svg>
                 </button>
               </div>
@@ -94,7 +94,7 @@
 
             <div class="field-group">
               <label>Theme</label>
-              <div class="segmented" role="group" aria-label="Tema">
+              <div class="segmented" role="group" aria-label="Theme">
                 <button class="theme-choice is-active" type="button" data-theme="neon">Neon</button>
                 <button class="theme-choice" type="button" data-theme="sunset">Coral</button>
                 <button class="theme-choice" type="button" data-theme="mono">Clean</button>
@@ -102,19 +102,19 @@
             </div>
 
             <div class="field-group">
-              <label>Placering</label>
-              <div class="position-grid" role="group" aria-label="Overlay placering">
-                <button type="button" data-align="top-left" title="Övre vänster"></button>
-                <button type="button" data-align="top-center" title="Övre mitten"></button>
-                <button type="button" data-align="top-right" title="Övre höger"></button>
-                <button type="button" data-align="bottom-left" title="Nedre vänster"></button>
-                <button type="button" data-align="bottom-center" title="Nedre mitten"></button>
-                <button class="is-active" type="button" data-align="bottom-right" title="Nedre höger"></button>
+              <label>Position</label>
+              <div class="position-grid" role="group" aria-label="Overlay position">
+                <button type="button" data-align="top-left" title="Top left"></button>
+                <button type="button" data-align="top-center" title="Top center"></button>
+                <button type="button" data-align="top-right" title="Top right"></button>
+                <button type="button" data-align="bottom-left" title="Bottom left"></button>
+                <button type="button" data-align="bottom-center" title="Bottom center"></button>
+                <button class="is-active" type="button" data-align="bottom-right" title="Bottom right"></button>
               </div>
             </div>
 
             <div class="field-group">
-              <label for="scaleInput">Storlek</label>
+              <label for="scaleInput">Size</label>
               <input id="scaleInput" type="range" min="80" max="150" value="100" />
             </div>
 

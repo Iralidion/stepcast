@@ -1,4 +1,4 @@
-const formatter = new Intl.NumberFormat("sv-SE");
+const formatter = new Intl.NumberFormat("en-US");
 
 const defaults = {
   steps: 12486,
@@ -56,7 +56,7 @@ function clamp(value, min, max) {
 
 function save() {
   localStorage.setItem("stepcast-state", JSON.stringify(state));
-  els.savedState.textContent = syncReady ? "Synkad med OBS" : "Sparad lokalt";
+  els.savedState.textContent = syncReady ? "Synced with OBS" : "Saved locally";
 }
 
 async function pullServerState() {
@@ -102,9 +102,9 @@ async function copyObsUrl() {
   const text = obsUrl();
   try {
     await navigator.clipboard.writeText(text);
-    els.savedState.textContent = "OBS URL kopierad";
+    els.savedState.textContent = "OBS URL copied";
   } catch {
-    els.savedState.textContent = "Kopiera URL manuellt";
+    els.savedState.textContent = "Copy the URL manually";
   }
 }
 
@@ -129,7 +129,7 @@ function render() {
   els.percentText.textContent = `${percent}%`;
   els.progressFill.style.width = `${progress}%`;
   els.paceText.textContent = `${sourceLabel} +${formatter.format(sessionDelta)}`;
-  els.leftText.textContent = left > 0 ? `${formatter.format(left)} kvar` : "Mål nått";
+  els.leftText.textContent = left > 0 ? `${formatter.format(left)} left` : "Goal reached";
   els.stepsInput.value = steps;
   els.goalInput.value = goal;
   els.scaleInput.value = state.scale;
