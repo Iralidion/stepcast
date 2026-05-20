@@ -10,7 +10,9 @@ let streamState = {
   theme: "neon",
   align: "bottom-right",
   scale: 100,
-  sessionStart: 12066
+  sessionStart: 12066,
+  source: "manual",
+  updatedAt: new Date().toISOString()
 };
 
 const types = {
@@ -23,12 +25,24 @@ const types = {
 
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
+
+  if (request.method === "OPTIONS") {
+    response.writeHead(204, corsHeaders);
+    response.end();
+    return;
+  }
 
   if (url.pathname === "/api/state") {
     if (request.method === "GET") {
       response.writeHead(200, {
         "Content-Type": "application/json; charset=utf-8",
-        "Cache-Control": "no-store"
+        "Cache-Control": "no-store",
+        ...corsHeaders
       });
       response.end(JSON.stringify(streamState));
       return;
@@ -48,17 +62,69 @@ const server = http.createServer((request, response) => {
             ...incoming,
             steps: Math.max(0, Number(incoming.steps ?? streamState.steps) || 0),
             goal: Math.max(1, Number(incoming.goal ?? streamState.goal) || 1),
-            scale: Math.min(Math.max(Number(incoming.scale ?? streamState.scale) || 100, 80), 150)
+            scale: Math.min(Math.max(Number(incoming.scale ?? streamState.scale) || 100, 80), 150),
+            source: incoming.source || "manual",
+            updatedAt: new Date().toISOString()
           };
-          response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+          response.writeHead(200, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
           response.end(JSON.stringify(streamState));
         } catch {
-          response.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+          response.writeHead(400, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
           response.end(JSON.stringify({ error: "Invalid JSON" }));
         }
       });
       return;
     }
+  }
+
+  if (url.pathname === "/api/wearable" && request.method === "POST") {
+    let body = "";
+    request.on("data", (chunk) => {
+      body += chunk;
+      if (body.length > 1e6) request.destroy();
+    });
+    request.on("end", () => {
+      try {
+        const incoming = JSON.parse(body || "{}");
+        const hasSteps = incoming.steps !== undefined;
+        const hasDelta = incoming.delta !== undefined;
+
+        if (!hasSteps && !hasDelta) {
+          response.writeHead(400, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
+          response.end(JSON.stringify({ error: "Send either steps or delta." }));
+          return;
+        }
+
+        const nextSteps = hasSteps
+          ? Number(incoming.steps)
+          : Number(streamState.steps) + Number(incoming.delta);
+
+        if (!Number.isFinite(nextSteps)) {
+          response.writeHead(400, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
+          response.end(JSON.stringify({ error: "steps or delta must be numeric." }));
+          return;
+        }
+
+        streamState = {
+          ...streamState,
+          steps: Math.max(0, Math.round(nextSteps)),
+          source: incoming.source || "wearable",
+          deviceName: incoming.deviceName || incoming.device || streamState.deviceName || "Wearable",
+          updatedAt: new Date().toISOString()
+        };
+
+        if (incoming.goal !== undefined) {
+          streamState.goal = Math.max(1, Number(incoming.goal) || streamState.goal);
+        }
+
+        response.writeHead(200, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
+        response.end(JSON.stringify(streamState));
+      } catch {
+        response.writeHead(400, { "Content-Type": "application/json; charset=utf-8", ...corsHeaders });
+        response.end(JSON.stringify({ error: "Invalid JSON" }));
+      }
+    });
+    return;
   }
 
   const safePath = path.normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");

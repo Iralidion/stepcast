@@ -56,6 +56,42 @@ Height: 720
 
 The overlay polls the local server for updates, so the control panel and OBS Browser Source stay in sync even if OBS uses a different browser profile.
 
+## Wearable Bridge
+
+StepCast includes a generic wearable bridge endpoint. This lets a watch, phone, automation, or local helper app send step data into the overlay.
+
+Send a total step count:
+
+```bash
+curl -X POST http://localhost:4173/api/wearable \
+  -H "Content-Type: application/json" \
+  -d "{\"steps\":12800,\"source\":\"wearable\",\"deviceName\":\"Apple Watch\"}"
+```
+
+Send an incremental step update:
+
+```bash
+curl -X POST http://localhost:4173/api/wearable \
+  -H "Content-Type: application/json" \
+  -d "{\"delta\":250,\"source\":\"wearable\",\"deviceName\":\"Fitbit\"}"
+```
+
+Payload fields:
+
+- `steps`: absolute step count to show.
+- `delta`: steps to add to the current count.
+- `source`: optional source label, usually `wearable`.
+- `deviceName`: optional device label shown in the control panel and overlay metadata.
+- `goal`: optional daily or stream goal.
+
+Wearables usually do not send directly to OBS. For Apple Health, Fitbit, Garmin, Google Fit, or Samsung Health, use a small companion app, shortcut, automation, or bridge script that reads the wearable data and posts it to `/api/wearable`.
+
+If you post from another device on the same network, replace `localhost` with the streamer's computer IP address, for example:
+
+```text
+http://192.168.1.50:4173/api/wearable
+```
+
 ## URL Options
 
 You can customize the overlay with query parameters:

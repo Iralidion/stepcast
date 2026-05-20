@@ -6,7 +6,9 @@ const defaults = {
   theme: "neon",
   align: "bottom-right",
   scale: 100,
-  sessionStart: 12066
+  sessionStart: 12066,
+  source: "manual",
+  deviceName: ""
 };
 
 const params = new URLSearchParams(window.location.search);
@@ -112,12 +114,17 @@ function render() {
   const progress = clamp((steps / goal) * 100, 0, 100);
   const left = Math.max(0, goal - steps);
   const sessionDelta = Math.max(0, steps - (state.sessionStart || 0));
+  const sourceLabel = state.source === "wearable"
+    ? state.deviceName || "Wearable"
+    : state.source === "api"
+      ? "API bridge"
+      : "Manual input";
 
   els.overlaySteps.textContent = formatter.format(steps);
   els.goalText.textContent = `${formatter.format(goal)} goal`;
   els.percentText.textContent = `${percent}%`;
   els.progressFill.style.width = `${progress}%`;
-  els.paceText.textContent = `+${formatter.format(sessionDelta)} denna stream`;
+  els.paceText.textContent = `${sourceLabel} +${formatter.format(sessionDelta)}`;
   els.leftText.textContent = left > 0 ? `${formatter.format(left)} kvar` : "Mål nått";
   els.stepsInput.value = steps;
   els.goalInput.value = goal;
@@ -127,7 +134,7 @@ function render() {
   els.overlayCard.className = `overlay-card theme-${state.theme}`;
   els.overlayCard.style.transform = `scale(${state.scale / 100})`;
   els.overlayPreview.className = `overlay-stage align-${state.align}`;
-  els.statusPill.textContent = isOverlay ? "Overlay live" : "Manual input";
+  els.statusPill.textContent = isOverlay ? "Overlay live" : sourceLabel;
 
   document.querySelectorAll(".theme-choice").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.theme === state.theme);
@@ -138,7 +145,7 @@ function render() {
 }
 
 function update(partial) {
-  Object.assign(state, partial);
+  Object.assign(state, { source: "manual" }, partial);
   save();
   pushServerState();
   render();
