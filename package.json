@@ -1,0 +1,19 @@
+{
+  "name": "stepcast",
+  "version": "1.0.0",
+  "description": "A local OBS Browser Source pedometer overlay for Twitch streams.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check app.js"
+  },
+  "keywords": [
+    "obs",
+    "twitch",
+    "pedometer",
+    "overlay",
+    "streaming"
+  ],
+  "author": "",
+  "license": "MIT"
+}
