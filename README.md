@@ -1,123 +1,91 @@
 # StepCast
 
-StepCast is a lightweight browser-based pedometer overlay for Twitch streams. It is designed to run locally and be added to OBS as a Browser Source.
+StepCast is a local pedometer overlay for Twitch streams. Run it on the streamer's computer, add the overlay URL to OBS, and update steps manually or from a wearable bridge.
 
-The app has two views:
+## Quick Start
 
-- A control panel for updating steps, goal, theme, position, and scale.
-- A clean overlay mode for OBS with a transparent background.
+1. Start StepCast:
 
-## Requirements
+```bash
+npm start
+```
 
-- Node.js 18 or newer
-- OBS Studio
-
-No build step is required.
-
-## Run Locally
-
-From the project folder, start the local server:
+or:
 
 ```bash
 node server.js
 ```
 
-Open the control panel:
+2. Open the control panel:
 
 ```text
 http://localhost:4173/
 ```
 
-Open the OBS overlay:
+3. Add this URL as an OBS Browser Source:
 
 ```text
 http://localhost:4173/?mode=overlay
 ```
 
-## Add to OBS
-
-1. Open OBS Studio.
-2. Add a new source.
-3. Choose **Browser**.
-4. Set the URL to:
-
-```text
-http://localhost:4173/?mode=overlay
-```
-
-5. Recommended size:
+Recommended OBS size:
 
 ```text
 Width: 1280
 Height: 720
 ```
 
-6. Enable a transparent background if your OBS version shows that option.
+## Updating Steps
 
-The overlay polls the local server for updates, so the control panel and OBS Browser Source stay in sync even if OBS uses a different browser profile.
+You have two simple options.
 
-## Wearable Bridge
+### Manual Mode
 
-StepCast includes a generic wearable bridge endpoint. This lets a watch, phone, automation, or local helper app send step data into the overlay.
+Use the control panel to type the current step count, change the goal, pick a theme, and position the overlay.
 
-Send a total step count:
+### Wearable Mode
 
-```bash
-curl -X POST http://localhost:4173/api/wearable \
-  -H "Content-Type: application/json" \
-  -d "{\"steps\":12800,\"source\":\"wearable\",\"deviceName\":\"Apple Watch\"}"
-```
-
-Send an incremental step update:
+Send step data to the local wearable endpoint:
 
 ```bash
 curl -X POST http://localhost:4173/api/wearable \
   -H "Content-Type: application/json" \
-  -d "{\"delta\":250,\"source\":\"wearable\",\"deviceName\":\"Fitbit\"}"
+  -d "{\"steps\":12800,\"deviceName\":\"Apple Watch\"}"
 ```
 
-Payload fields:
+To add steps instead of replacing the total:
 
-- `steps`: absolute step count to show.
-- `delta`: steps to add to the current count.
-- `source`: optional source label, usually `wearable`.
-- `deviceName`: optional device label shown in the control panel and overlay metadata.
-- `goal`: optional daily or stream goal.
+```bash
+curl -X POST http://localhost:4173/api/wearable \
+  -H "Content-Type: application/json" \
+  -d "{\"delta\":250,\"deviceName\":\"Fitbit\"}"
+```
 
-Wearables usually do not send directly to OBS. For Apple Health, Fitbit, Garmin, Google Fit, or Samsung Health, use a small companion app, shortcut, automation, or bridge script that reads the wearable data and posts it to `/api/wearable`.
-
-If you post from another device on the same network, replace `localhost` with the streamer's computer IP address, for example:
+For a phone or watch bridge on the same network, replace `localhost` with the streamer's computer IP address:
 
 ```text
 http://192.168.1.50:4173/api/wearable
 ```
 
-## URL Options
+Apple Health, Fitbit, Garmin, Google Fit, and Samsung Health usually need a companion app, shortcut, automation, or small bridge script that reads the wearable data and posts it to this endpoint.
 
-You can customize the overlay with query parameters:
+## Overlay Options
+
+You can customize the OBS URL:
 
 ```text
 http://localhost:4173/?mode=overlay&theme=neon&align=bottom-right&scale=100
 ```
 
-Available options:
+- `theme=neon`, `theme=sunset`, or `theme=mono`
+- `align=top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, or `bottom-right`
+- `scale=80` to `scale=150`
 
-- `mode=overlay` shows only the OBS overlay.
-- `theme=neon`, `theme=sunset`, or `theme=mono` changes the visual theme.
-- `align=top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, or `bottom-right` changes the overlay position.
-- `scale=80` to `scale=150` changes the overlay size.
-
-## Sharing With Another Streamer
-
-The easiest way to share StepCast is to send them this repository. They can clone it, run `node server.js`, and add the overlay URL to OBS.
-
-For a public hosted version, add user-specific rooms or stream keys first. The current local server keeps one shared state, which is perfect for one streamer on one machine but not enough for multiple public users at the same time.
-
-## Project Structure
+## Project Files
 
 ```text
 index.html    Control panel and overlay markup
 styles.css    App and OBS overlay styling
-app.js        UI state, controls, and server sync
-server.js     Local static server and /api/state endpoint
+app.js        UI state, controls, and sync
+server.js     Local server, /api/state, and /api/wearable
 ```

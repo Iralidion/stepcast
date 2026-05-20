@@ -316,8 +316,37 @@ h2 {
 .control-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   padding: 18px;
+}
+
+.setup-steps {
+  display: grid;
+  gap: 8px;
+  margin: -2px 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.setup-steps li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #c7d4dd;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.setup-steps span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: #071018;
+  background: linear-gradient(135deg, var(--cyan), var(--lime));
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
 }
 
 .field-group {
@@ -438,6 +467,21 @@ input[type="range"] {
   display: block;
   margin-top: 0;
   color: #d9e4eb;
+}
+
+.wearable-box details {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.wearable-box summary {
+  cursor: pointer;
+  color: var(--lime);
+  font-weight: 850;
+}
+
+.wearable-box details code {
+  margin-top: 8px;
 }
 
 .primary-button {

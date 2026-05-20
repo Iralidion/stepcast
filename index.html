@@ -64,12 +64,18 @@
 
           <aside class="control-panel" aria-label="Kontroller">
             <div class="panel-title">
-              <h2>Controls</h2>
+              <h2>Setup</h2>
               <span id="savedState">Sparad lokalt</span>
             </div>
 
+            <ol class="setup-steps" aria-label="Snabbstart">
+              <li><span>1</span>Starta servern</li>
+              <li><span>2</span>Kopiera OBS-länken</li>
+              <li><span>3</span>Välj manuell eller wearable</li>
+            </ol>
+
             <div class="field-group">
-              <label for="stepsInput">Manual input</label>
+              <label for="stepsInput">Steps</label>
               <div class="stepper">
                 <button id="minus100" type="button" aria-label="Minska med 100">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z" /></svg>
@@ -82,7 +88,7 @@
             </div>
 
             <div class="field-group two-col">
-              <label for="goalInput">Goal</label>
+              <label for="goalInput">Step goal</label>
               <input id="goalInput" type="number" min="1" step="100" inputmode="numeric" />
             </div>
 
@@ -114,7 +120,7 @@
 
             <div class="obs-box">
               <div>
-                <h3>OBS Browser Source</h3>
+                <h3>OBS link</h3>
                 <p id="obsUrl"></p>
               </div>
               <button id="copyUrl" class="primary-button" type="button">
@@ -124,9 +130,14 @@
             </div>
 
             <div class="wearable-box">
-              <h3>Wearable Bridge</h3>
-              <p>POST steps from a watch, phone, shortcut, or bridge app to <code>/api/wearable</code>.</p>
-              <code>{"steps": 12800, "source": "wearable", "deviceName": "Apple Watch"}</code>
+              <div>
+                <h3>Step source</h3>
+                <p id="sourceSummary">Manual input is active.</p>
+              </div>
+              <details>
+                <summary>Wearable endpoint</summary>
+                <code>POST /api/wearable {"steps": 12800, "deviceName": "Apple Watch"}</code>
+              </details>
             </div>
 
             <div class="utility-row">

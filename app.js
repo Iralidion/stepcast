@@ -42,7 +42,8 @@ const els = {
   scaleInput: document.getElementById("scaleInput"),
   obsUrl: document.getElementById("obsUrl"),
   savedState: document.getElementById("savedState"),
-  statusPill: document.getElementById("statusPill")
+  statusPill: document.getElementById("statusPill"),
+  sourceSummary: document.getElementById("sourceSummary")
 };
 
 if (isOverlay) {
@@ -119,6 +120,9 @@ function render() {
     : state.source === "api"
       ? "API bridge"
       : "Manual input";
+  const sourceSummary = state.source === "wearable"
+    ? `${sourceLabel} is sending steps to StepCast.`
+    : "Manual input is active. Connect a phone, watch bridge, or shortcut later.";
 
   els.overlaySteps.textContent = formatter.format(steps);
   els.goalText.textContent = `${formatter.format(goal)} goal`;
@@ -130,6 +134,7 @@ function render() {
   els.goalInput.value = goal;
   els.scaleInput.value = state.scale;
   els.obsUrl.textContent = obsUrl();
+  els.sourceSummary.textContent = sourceSummary;
 
   els.overlayCard.className = `overlay-card theme-${state.theme}`;
   els.overlayCard.style.transform = `scale(${state.scale / 100})`;
